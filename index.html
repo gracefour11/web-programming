@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Set viewport width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <!-- Link to CSS -->
+    <link rel="stylesheet" href="projectSearchStyles.css" /> 
+    <title>Search</title>
+</head>
+<body>
+    <!-- HEADER AND THE LINKS -->
+    <div class="header">
+        <div class="header-links">
+            <a href="images.html">Images</a>
+            <a href="advanced.html">Advanced Search</a>
+        </div>
+    </div>
+
+    <!-- SEARCH BOX -->
+    <div class="search-box">
+        <img src="google.png" alt="Google logo" width="300" style="vertical-align:middle">
+        <form action="https://www.google.com/search" method="get">
+            <input class="search_field" type="text" name="q">
+            <!-- How to implement the im feeling lucky button -->
+            <!-- https://stackoverflow.com/questions/62869308/how-implement-im-feeling-lucky-in-html -->
+            <div id="container">               
+                <button type="submit" class="search_button" name="btnK" value="Google Search">Google Search</button>
+                <button type="submit" class="search_button" name="btnI" value="1">I am feeling lucky</button>
+            </div>
+
+
+
+        </form>
+    </div>
+
+
+</body>
+</html>
