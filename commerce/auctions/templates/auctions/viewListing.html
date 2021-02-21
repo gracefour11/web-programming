@@ -1,0 +1,97 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+{% if user.is_authenticated %}
+
+    {% if message %}
+        <div class="alert alert-{{message_type}}">{{ message }}</div>
+    {% endif %}
+
+    <div class="jumbotron">
+        <div class="container">
+            <div class="row">
+                
+                <div class="col-md-6">
+                    <h1>{{listing.title}}</h1>
+                    <br><br>
+                    <p class="lead"><strong>Description : </strong> {{listing.description}}</p>  
+                    <p class="lead"><strong>Category : </strong>{{listing.category}}</p>
+                    <p class="lead"><strong>Current Bid Price : </strong>${{listing.price}}</p>
+                    <p class="lead"><strong>Seller : </strong>{{listing.user}}</p>
+                    <p class="lead"><strong>Created on : </strong>{{listing.created_date}}</p>
+                </div>
+                
+                <div class="col-md-6">
+                    <img src={{listing.image_link}} style="width:100%; object-fit:cover;" alt="listing-image">
+                </div>
+            </div>
+            {% if not is_owner and not has_winner %}
+                <p class="lead" align="justify" style="color: darkred;"><strong>Place your Bid : </strong></p>
+                <form action="{% url 'bid' listing.id %}" method="POST">
+                    {% csrf_token %}
+                    <div>Bid: $ <input type="number" min="{{ listing.price }}" step="0.01" name="bid" placeholder="{{ listing.price }}"></div>
+                    <br><br>
+                    <p align="justify"><input class="btn btn-primary" type="submit" value="Submit Bid"></p>
+                </form>
+                <p>
+                    {% if watching %}
+                    <a href="{% url 'removeFromWatchList' listing.id %}"><button class="btn btn-danger">Remove from watchlist</button></a>
+                    {% else %}
+                    <a href="{% url 'addToWatchList' listing.id %}"><button class="btn btn-success">Add to watchlist</button></a>
+                    {% endif %}
+                  </p>
+            
+            {% else %}
+                {% if is_owner %}
+                    <p class="lead"><strong>Current Bidder : </strong>{{current_bidder}}</p>
+                    <a href="{% url 'closeListing' listing.id %}" class="btn btn-primary">Close Listing</a>
+            
+                {% else %}
+                    <p class="lead"><strong>Item has been sold!</strong></p>
+                    <p class="lead"><strong>Winner: </strong>{{winner}}</p>
+            
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+    <hr>
+
+    <form action="{% url 'addComment' listing.id %}" method="post">
+        {% csrf_token %}
+        <h6>Add comment</h6>
+        <textarea class="form-control" aria-label="With textarea" name="comment" style="width:40%; vertical-align: top;"></textarea>
+        <input type="submit" class="btn btn-primary" style="display: inline-block; margin-top: 10px;">
+    </form>
+
+    <br> 
+
+    <h6>Comments:</h6>
+    <div class="container">
+        
+        <div class="card-columns">
+            {% for c in comments %}
+            <div class="card mb-3" style="max-width: 540px;">
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">{{c.user}}</h5>
+                        <p class="card-text">{{c.comment}}</p>
+                        <p class="card-text"><small class="text-muted">{{c.time}}</small></p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+         
+         
+  </div>
+
+{% else %}
+
+<h1>Please Log In or Create an Account.</h1>
+
+
+{% endif %}
+{% endblock %}
+
