@@ -1,0 +1,30 @@
+#index-view, #following-view, #profile-view, #login-view, #register-view {
+    color:whitesmoke;
+    padding:3rem;
+}
+.card {
+    background-color: white;
+    color: darkslategray;
+}
+
+#createpost-form {
+    padding:2rem;
+}
+
+#post-view {
+    padding: 2rem;
+    position:relative;
+}
+
+.fa-heart:hover {
+    transform:scale(1.2);
+}
+
+.fa-heart path {
+    stroke: black;
+    stroke-width: 20px;
+}
+
+body {
+    background-color:darkslategray;
+}

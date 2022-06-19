@@ -1,0 +1,23 @@
+<div id="profile-view">
+  <div class="container-fluid justify-content-center">
+      <h1 class="mb-auto text-center">{{profile_user.username}}</h1>
+      <h5 class="text-center mb-auto">
+          <hr>
+          <span>
+            Following: {{following_count}}
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Followers: {{follower_count}}
+          </span>
+          <br>
+          <br>
+          {% ifequal request.user profile_user %}
+          {% else %}
+              {% if is_following %}
+                  <a class="btn btn-danger btn-lg " href="{% url 'unfollow' profile_user.id %}">Unfollow</a>
+              {% else %}
+                  <a class="btn btn-success btn-lg " href="{% url 'follow' profile_user.id %}">Follow</a>
+              {% endif %}
+          {% endifequal %}
+      </h5>
+  </div>
+</div>

@@ -1,0 +1,91 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid" id="index-view">
+  {% if is_profile_page == "True" %}
+    {% include "network/profile.html" %}
+  {% else %}  
+    <h1>{{ title }}</h1>
+  {% endif %}
+    <!-- CREATE POST -->
+  {% if remove_create_post == "False" %}
+    {% include "network/createpost.html" %}
+  {% endif %}
+    
+    <br>
+    {% csrf_token %}
+
+    <!-- SHOW ALL POSTS BY CURRENT USER -->
+    {% for post in all_posts %}
+    <div class="card border-light mb-3" id="post-view">
+        <div class="card-body">
+            <h2 class="card-title"><a href="{% url 'profile' post.user.username %}">{{post.user.username}}</a></h2>
+            <h3 class="card-text" id="post_body_{{post.id}}"> {{ post.contents }}</h3>
+            <!-- <h5 class="card-text" id="like_count_{{post.id}}"> Likes: {{ post.get_likes_count }}</h5> -->
+            <p class="card-text ml-auto p-2"><small>{{post.created_dt}}</small></p>
+            
+            <div style="display: inline-flex">
+              {% if request.user in post.likes.all %}
+                <i id="like_btn_{{post.id}}" class="fa fa-heart fa-2x" style="color: salmon; " onclick="like_or_unlike(`{{post.id}}`)"></i>
+              {% else %}
+                <i id="like_btn_{{post.id}}" class="fa fa-heart fa-2x" style="color: white; " onclick="like_or_unlike(`{{post.id}}`)"></i>
+              {% endif %}
+              &nbsp;&nbsp;&nbsp;
+              <h5 id="like_count_{{post.id}}"> {{ post.get_likes_count }}</h5>
+
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <!-- EDIT FUNCTION (if current user is post user) -->
+              {% ifequal request.user post.user %}
+              <button class="btn btn-outline-info" onclick='edit_post(`{{post.id}}`)'>Edit</button>
+              {% endifequal %}
+            </div> 
+
+            <!-- EDIT POST VIEW -->
+            <div id="edit_post_body_{{post.id}}" style="display:none">
+              <br>
+              <h5>Edit Post</h5>
+              <form id="edit_form_{{post.id}}">
+                <div class="form-group">
+                  <div class="input-group">
+                      <textarea class="form-control" rows="3" id="edit_text_{{post.id}}">{{post.contents}}</textarea>
+                  </div>
+              </div>
+              <button type="submit" class="btn btn-success">Save Changes</button>
+              </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <br>
+    <!-- PAGINATION -->
+    <ul class="pagination justify-content-center">
+        {% if all_posts.has_previous %}
+          <li class="page-item"><a class="page-link" href="?page={{ all_posts.previous_page_number }}">Previous</a></li>
+        {% else %}
+          <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+        {% endif %}
+        {% for i in all_posts.paginator.page_range %}
+          {% if all_posts.number == i %}
+            <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+          {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+          {% endif %}
+        {% endfor %}
+        {% if all_posts.has_next %}
+          <li class="page-item"><a class="page-link" href="?page={{ all_posts.next_page_number }}">Next</a></li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">Next</span></li>
+        {% endif %}
+    </ul>
+</div>
+<script type ="text/javascript" src="{% static 'network/index.js' %}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+{% endblock %}
+
